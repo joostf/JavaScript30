@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+  <link rel="icon" href="https://fav.farm/🦄" />
+</head>
+<body>
+
+    <time class="clock" datetime="">
+        <em></em>    
+        <span class="clock-face">
+            <span class="hand hour-hand"></span>
+            <span class="hand min-hand"></span>
+            <span class="hand second-hand"></span>
+        </span>
+    </time>
+
+    <style>
+        :root {
+            --degrees: 90deg
+        }
+        html {
+            background: rgb(2,0,36);
+            background: radial-gradient(circle,rgba(0,212,255,1)  0%, rgba(9,9,121,1) 35%, rgba(2,0,36,1) 100%);
+            font-family: 'helvetica neue';
+            text-align: center;
+            font-size: 10px;
+        }
+
+        body {
+            margin: 0;
+            font-size: 2rem;
+            display: flex;
+            flex: 1;
+            min-height: 100vh;
+            align-items: center;
+        }
+
+        .clock {
+            width: 30rem;
+            height: 30rem;
+            border: 20px solid white;
+            border-radius: 50%;
+            margin: 50px auto;
+            position: relative;
+            padding: 2rem;
+            box-shadow:
+                0 0 0 4px rgba(0,0,0,0.1),
+                inset 0 0 0 3px #EFEFEF,
+                inset 0 0 10px black,
+                0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .clock-face {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform: translateY(-3px); /* account for the height of the clock hands */
+            display: grid;
+        }
+        .clock-face::after {
+            content:"";
+            width:25px;
+            aspect-ratio: 1;
+            background-color:#024aac;
+            place-self: center;
+            position: relative;
+            z-index:100;
+            border-radius:50%;
+            box-shadow:
+                0 0 0 4px rgba(0,0,0,0.1),
+                inset 0 0 0 3px #EFEFEF,
+                inset 0 0 10px black,
+                0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .hand {
+            border-radius:50%;
+            width: 50%;
+            height: 6px;
+            background: rgba(9,9,121,1);
+            position: absolute;
+            top: 50%;
+            transform-origin: 100%;
+            rotate: var(--degrees);
+            transition: all 0.05s;
+            transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+            box-shadow:                
+                0 0 5px rgba(0,0,0,0.2);
+        }
+
+        .hour-hand,
+        .min-hand,
+        .seconds-hand {
+            rotate:var(--degrees);
+            background:#0073ff
+        }
+        .hour-hand {
+            width:35%;
+            left:15%;
+        }
+
+        .second-hand {
+            height:3px;
+            background:rgba(0,212,255,1);
+        }
+    </style>
+
+    <script>
+        // declare variables
+        const clock = document.querySelector('.clock-face')
+        const secondHand = document.querySelector('.second-hand')
+        const minsHand = document.querySelector('.min-hand')
+        const hourHand = document.querySelector('.hour-hand')
+        const tick = new Audio('tink.wav')  
+        
+        // logic (code flow)
+        setInterval(setClock, 1000)
+        setClock()
+
+        // functions
+        function setClock() {
+            setSeconds()
+            setMinutes()
+            setHours()
+        }
+
+        function setSeconds() {
+            const seconds = now().getSeconds()
+            const secondsDegrees = ((seconds / 60) * 360) + 90
+            secondHand.style.setProperty('--degrees', `${secondsDegrees}deg`)  
+            tick.play()
+        }
+
+        function setMinutes() {
+            const minutes = now().getMinutes()
+            const seconds = now().getSeconds()
+            const minsDegrees = ((minutes / 60) * 360) + ((seconds / 60)*6) + 90
+            minsHand.style.setProperty('--degrees', `${minsDegrees}deg`)
+        }
+
+        function setHours() {
+            const hours = now().getHours()
+            const minutes = now().getMinutes()
+            const hourDegrees = ((hours / 12) * 360) + ((minutes / 60)*30) + 90
+            hourHand.style.setProperty('--degrees', `${hourDegrees}deg`)
+        }
+        
+        function now (){
+            return new Date()
+        } 
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+<!-- 
+    const tick = new Audio('tink.wav')
+    tick.play()
+ -->
